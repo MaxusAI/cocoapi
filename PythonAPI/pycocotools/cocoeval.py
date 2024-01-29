@@ -453,6 +453,29 @@ class COCOeval:
                 mean_s = -1
             else:
                 mean_s = np.mean(s[s>-1])
+
+            #cacluate AP(average precision) for each category
+            num_classes = len(p.catIds)
+            if ap == 1:
+                avg_ap = 0.0
+                num_classes_active = 0
+                for i in range(0, num_classes):
+                    if np.mean(s[:,:,i,:]) > -1:
+                       print('Category (mAP) : {0} : {1:.3f}'.format(i+1,np.mean(s[:,:,i,:])))
+                       avg_ap +=np.mean(s[:,:,i,:])
+                       num_classes_active += 1
+                print('(all _active_ categories) mAP : {:.4f}'.format(avg_ap / num_classes_active))
+            else:
+                avg_ar = 0.0
+                num_classes_active = 0
+                for i in range(0, num_classes):
+                     if np.mean(s[:,i,:]) > -1:
+                        print('Category (AR) : {0} : {1:.3f}'.format(i+1,np.mean(s[:,i,:])))
+                        avg_ar += np.mean(s[:,i,:])
+                        num_classes_active += 1
+                print('(all _active_ categories) AR : {:.4f}'.format(avg_ar / num_classes_active))
+
+
             print(iStr.format(titleStr, typeStr, iouStr, areaRng, maxDets, mean_s))
             return mean_s
         def _summarizeDets():
